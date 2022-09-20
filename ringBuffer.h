@@ -1,6 +1,11 @@
 /** @file ringBuffer.h
  * 
  * @brief A ring buffer to store integers, and some useful functions
+ *          implementated with design by contract, will fail hard if 
+ *          misused.
+ * 
+ *          use-case specific assumption: values are never removed
+ *              once full, the buffer remains full for its lifespan
  *
  * @par       
  * COPYRIGHT NOTICE: (header template) (c) 2018 Barr Group.  All rights reserved.
@@ -24,7 +29,7 @@ typedef ringBuffer* ringBufferHandle;
  * 
  * @return handle to the newly created ringBuffer
  */
-ringBufferHandle initRingBuffer(int* buffer, int capacity);
+ringBufferHandle initRingBuffer(int* data, int capacity);
 
 /* -------------------------------------------------------------------------- */
 
@@ -39,24 +44,13 @@ void push(ringBufferHandle buffer, int newValue);
 /* -------------------------------------------------------------------------- */
 
 /**
- * @brief add all elements of the ring buffer together
- * 
- * @param[in] buffer ring buffer to sum
- * 
- * @return sum of all elements. long long to prevent overflow when summing
- */
-long long sum(ringBufferHandle buffer);
-
-/* -------------------------------------------------------------------------- */
-
-/**
  * @brief get the average value of the buffer
  * 
  * @param[in] buffer ring buffer to avg
  * 
- * @return average buffer value, double to minimize rounding error
+ * @return average buffer value, float to minimize rounding error
  */
-double avg(ringBufferHandle buffer);
+float avg(ringBufferHandle buffer);
 
 /* -------------------------------------------------------------------------- */
 
@@ -65,7 +59,7 @@ double avg(ringBufferHandle buffer);
  * 
  * @param[out] buffer ringBuffer to clear
  */
-void clearRingBuffer(ringBufferHandle buffer);
+bool clearRingBuffer(ringBufferHandle buffer);
 
 /* -------------------------------------------------------------------------- */
 
@@ -76,18 +70,7 @@ void clearRingBuffer(ringBufferHandle buffer);
  * 
  * @return 1 if empty, 0 if not empty
  */
-bool isEmpty(ringBufferHandle bufferHandle);
-
-/* -------------------------------------------------------------------------- */
-
-/**
- * @brief Determine if the ring buffer is full or not
- * 
- * @param[in] handle to ring buffer
- * 
- * @return 1 if full, 0 if not full
- */
-bool isFull(ringBufferHandle bufferHandle);
+bool isEmpty(ringBufferHandle buffer);
 
 /* -------------------------------------------------------------------------- */
 
@@ -98,7 +81,7 @@ bool isFull(ringBufferHandle bufferHandle);
  * 
  * @return size of the buffer in bytes
  */
-size_t size(ringBufferHandle bufferHandle);
+size_t size(ringBufferHandle buffer);
 
 /* -------------------------------------------------------------------------- */
 
