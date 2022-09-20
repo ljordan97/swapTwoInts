@@ -14,6 +14,9 @@
 #ifndef RINGBUFFER_H
 #define RINGBUFFER_H
 
+#include <stdbool.h> 
+
+
 typedef struct ringBuffer ringBuffer;
 
 //user should interact with the ring buffer via its handle
@@ -59,7 +62,7 @@ float avg(ringBufferHandle buffer);
  * 
  * @param[out] buffer ringBuffer to clear
  */
-bool clearRingBuffer(ringBufferHandle buffer);
+void clearRingBuffer(ringBufferHandle buffer);
 
 /* -------------------------------------------------------------------------- */
 

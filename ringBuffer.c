@@ -1,7 +1,16 @@
+/** @file ringBuffer.c
+ * 
+ * @brief implementation of the API declared in ringBuffer.h
+ *
+ * @par       
+ * COPYRIGHT NOTICE: (source file template) (c) 2018 Barr Group. All rights reserved.
+ */
+
+#include <assert.h>
 #include "ringBuffer.h"
 
 struct ringBuffer {
-    int* data;
+    int * data;
     size_t head;
     size_t tail;
     int capacity;
@@ -11,7 +20,7 @@ struct ringBuffer {
 ringBufferHandle initRingBuffer(int* data, int capacity)
 {
     //verify memory and size
-    assert(buffer && capacity);
+    assert(data && capacity);
 
     ringBufferHandle ringBuff = malloc(sizeof(ringBuffer));
     
@@ -62,7 +71,7 @@ size_t size(ringBufferHandle buffer)
 
 void push(ringBufferHandle buffer, int newValue)
 {
-    assert(buffer & buffer->data && newValue);
+    assert(buffer && (buffer->data) && newValue);
 
     buffer->data[buffer->head] = newValue;
 
@@ -88,16 +97,20 @@ void push(ringBufferHandle buffer, int newValue)
 
 float avg(ringBufferHandle buffer)
 {
-    assert(buffer && buffer->data)
+    assert(buffer && buffer->data);
     
     //long long to prevent overflow
-    long long runningSum = 0;
+    long long int runningSum = 0;
+
+    int bufSize = size(buffer);
 
     for (int i = 0; i < size(buffer); i++)
     {
         //doesn't matter if buffer has wrapped, math is the same
-        runningSum += buffer->data[i];
+        runningSum += (buffer->data[i]);
     }
 
-    return (float)runningSum / size;
+    return (runningSum / (float)bufSize);
 }
+
+/*** end of file ***/
