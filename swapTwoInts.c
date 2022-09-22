@@ -13,6 +13,7 @@
 #include <stdlib.h> 
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "ringBuffer.c"
 
@@ -23,13 +24,13 @@
  */
 void swapTwoInts(int* numsToSwap)
 {
-    printf("Going to swap %d with %d\n", numsToSwap[0], numsToSwap[1]);
+    printf("\nGoing to swap %d with %d\n", numsToSwap[0], numsToSwap[1]);
 
     numsToSwap[0] += numsToSwap[1];
     numsToSwap[1] = numsToSwap[0] - numsToSwap[1];
     numsToSwap[0] -= numsToSwap[1];
 
-    printf("swapped values: %d, %d\n", numsToSwap[0], numsToSwap[1]);
+    printf("Num1: %d\nNum2: %d\n", numsToSwap[0], numsToSwap[1]);
 }
 
 /**
@@ -45,22 +46,42 @@ void promptUserForTwoInts(int* twoInts)
     int n;
 
     puts("Input two integers, one at a time:");
-    for(int inputCount = 0; inputCount < 2; inputCount++)
+
+    inputPrompt: for(unsigned int inputCount = 0; inputCount < 2; inputCount++)
     {
         //prompt user for one num
         printf("Num%d: ", inputCount + 1);
 
         fgets(s, sizeof(s), stdin);
 
-        n = atoi(s);
-
+        //check if input was given at all
         if (strlen(s) == 0 || s[0] == '\n') 
         {
             printf("Please enter an integer: ");
+
+            //reset buffer
+            s[0] = '\0';
+            n = 0;
+
             --inputCount;
+            continue;
         }
 
-        //store input if acceptable
+        //check if input was numeric
+        for(unsigned int j = 0; (j < strlen(s) - 1); j++)
+        {
+            if(!isdigit(s[j]))
+            {
+                printf("\nBad input detected, try again\n");
+                --inputCount;
+                goto inputPrompt;
+            }
+        }
+
+        //convert input to int
+        n = atoi(s);
+
+        //store input 
         twoInts[inputCount] = n;
         
         //consume the rest of the input buffer if too much was given
@@ -85,7 +106,7 @@ void promptUserForTwoInts(int* twoInts)
 
 int main()
 {
-    //init two ring buffers to store swapped values 
+    //initialize two ring buffers to store swapped values 
     const int ringBufferSize = 20;
 
     int* buffer1 =   malloc(ringBufferSize * sizeof(int));
@@ -107,11 +128,8 @@ int main()
         push(ringBuffer1, userInput[0]);
         push(ringBuffer2, userInput[1]);
 
-        //view buffer
-        printBuffer(ringBuffer1);
-
         //calculate and display new averages
-        printf("Ring buffer 1 Average: %f\n", bufferAvg(ringBuffer1));
+        printf("\nRing buffer 1 Average: %f\n", bufferAvg(ringBuffer1));
         printf("Ring buffer 2 Average: %f\n\n\n", bufferAvg(ringBuffer2));
     }
 }
