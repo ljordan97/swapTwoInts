@@ -57,7 +57,7 @@ void promptUserForTwoInts(int* twoInts)
         //check if input was given at all
         if (strlen(s) == 0 || s[0] == '\n') 
         {
-            printf("Please enter an integer: ");
+            printf("Please enter an integer: \n");
 
             //reset buffer
             s[0] = '\0';
