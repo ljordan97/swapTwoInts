@@ -32,7 +32,7 @@ typedef ringBuffer* ringBufferHandle;
  * 
  * @return handle to the newly created ringBuffer
  */
-ringBufferHandle initRingBuffer(int* data, int capacity);
+ringBufferHandle initRingBuffer(int* data, const unsigned int capacity);
 
 /* -------------------------------------------------------------------------- */
 
@@ -53,7 +53,7 @@ void push(ringBufferHandle buffer, int newValue);
  * 
  * @return average buffer value, float to minimize rounding error
  */
-float avg(ringBufferHandle buffer);
+float bufferAvg(ringBufferHandle buffer);
 
 /* -------------------------------------------------------------------------- */
 
@@ -87,6 +87,13 @@ bool isEmpty(ringBufferHandle buffer);
 size_t size(ringBufferHandle buffer);
 
 /* -------------------------------------------------------------------------- */
+
+/**
+ * @brief print out the buffer's contents, for debug
+ * 
+ * @param[in] handle to ring buffer
+ */
+void printBuffer(ringBufferHandle buffer);
 
 #endif /* RINGBUFFER_H */
 

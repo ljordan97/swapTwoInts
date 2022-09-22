@@ -13,11 +13,11 @@ struct ringBuffer {
     int * data;
     size_t head;
     size_t tail;
-    int capacity;
+    unsigned int capacity;
     bool full;
 };
 
-ringBufferHandle initRingBuffer(int* data, int capacity)
+ringBufferHandle initRingBuffer(int* data, const unsigned int capacity)
 {
     //verify memory and size
     assert(data && capacity);
@@ -69,9 +69,9 @@ size_t size(ringBufferHandle buffer)
     }
 }
 
-void push(ringBufferHandle buffer, int newValue)
+void push(ringBufferHandle buffer, const int newValue)
 {
-    assert(buffer && (buffer->data) && newValue);
+    assert(buffer && (buffer->data));
 
     buffer->data[buffer->head] = newValue;
 
@@ -89,28 +89,37 @@ void push(ringBufferHandle buffer, int newValue)
     {
         //reset the head
         buffer->head = 0;
-
-        //update full status
-        buffer->full = (buffer->head) == (buffer->tail);
     }
+
+    //update full status
+    buffer->full = (buffer->head) == (buffer->tail);
 }
 
-float avg(ringBufferHandle buffer)
+float bufferAvg(ringBufferHandle buffer)
 {
     assert(buffer && buffer->data);
     
     //long long to prevent overflow
     long long int runningSum = 0;
 
-    int bufSize = size(buffer);
+    unsigned int bufSize = size(buffer);
 
-    for (int i = 0; i < size(buffer); i++)
+    for (unsigned int i = 0; i < bufSize; i++)
     {
         //doesn't matter if buffer has wrapped, math is the same
         runningSum += (buffer->data[i]);
     }
 
     return (runningSum / (float)bufSize);
+}
+
+void printBuffer(ringBufferHandle buffer)
+{
+    printf("dumping buffer of size %ld and capacity %d\n", size(buffer), buffer->capacity);
+    for(unsigned int i = 0; i < size(buffer); i++)
+    {
+        printf("%d\n", buffer->data[i]);
+    }
 }
 
 /*** end of file ***/
